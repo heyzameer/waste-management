@@ -1,8 +1,17 @@
 "use client";
+import { string, object } from 'zod';
+
 import Navbar from "@/components/navbar";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import React, { useState } from "react";
 import { db } from "../../../firebase/firebaseConfig";
+
+const contactSchema = object({
+  name: string().min(5, { message: 'Name must be at least 2 characters long' }),
+  email: string().email({ message: 'Invalid email format' }),
+  message: string().min(5, { message: 'Message must be at least 10 characters long' }),
+});
+
 
 function Page() {
   const [confirm, setConfirm] = useState(false);
@@ -11,16 +20,58 @@ function Page() {
     setContact({ ...contact, [e.target.name]: e.target.value });
   };
   const submit = () => {
-    const dbInstance = collection(db, "contact");
-    addDoc(dbInstance, { ...contact, date: serverTimestamp() })
-      .then((res) => {
-        setContact({ email: "", name: "", message: "" });
-        setConfirm(!confirm);
-      })
-      .catch((err) => {
-        console.log(err);
+    const validationResult = contactSchema.safeParse(contact);
+  
+    if (validationResult.success) {
+      const dbInstance = collection(db, "contact");
+      addDoc(dbInstance, { ...contact, date: serverTimestamp() })
+        .then(() => {
+          setContact({ email: "", name: "", message: "" });
+          setConfirm(true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      let errorMessage = "";
+      validationResult.error.errors.forEach((error) => {
+        switch (error.path) {
+          case "name":
+            errorMessage += "Name must be at least 2 characters long.\n";
+            break;
+          case "email":
+            errorMessage += "Invalid email format.\n";
+            break;
+          case "message":
+            errorMessage += "Message must be at least 10 characters long.\n";
+            break;
+          default:
+            errorMessage += "Invalid email or user name.\n";
+        }
       });
+      alert(errorMessage);
+    }
   };
+  
+  
+
+// function Page() {
+//   const [confirm, setConfirm] = useState(false);
+//   const [contact, setContact] = useState({ email: "", name: "", message: "" });
+//   const onchange = (e) => {
+//     setContact({ ...contact, [e.target.name]: e.target.value });
+//   };
+//   const submit = () => {
+//     const dbInstance = collection(db, "contact");
+//     addDoc(dbInstance, { ...contact, date: serverTimestamp() })
+//       .then((res) => {
+//         setContact({ email: "", name: "", message: "" });
+//         setConfirm(!confirm);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//       });
+//   };
   return (
     <>
       <Navbar />
@@ -35,7 +86,7 @@ function Page() {
               title="map"
               marginheight="0"
               marginwidth="0"
-              src="https://maps.google.com/maps?width=100%&height=600&hl=en&q=%C4%B0zmir+(My%20Business%20Name)&ie=UTF8&t=&z=14&iwloc=B&output=embed"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7695.98253769993!2d74.74847604557075!3d15.32270964932819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbf266a5df844e3%3A0x1cd14e5a443ec23c!2sKLS%20Vishwanathrao%20Deshpande%20Institute%20of%20Technology!5e0!3m2!1sen!2sin!4v1708969313110!5m2!1sen!2sin"
               //   style="filter: grayscale(1) contrast(1.2) opacity(0.4);"
             ></iframe>
             <div class="bg-white relative flex flex-wrap py-6 rounded shadow-md">
@@ -44,8 +95,7 @@ function Page() {
                   ADDRESS
                 </h2>
                 <p class="mt-1">
-                  Photo booth tattooed prism, portland taiyaki hoodie neutra
-                  typewriter
+                  KLS VDIT HALIYAL
                 </p>
               </div>
               <div class="lg:w-1/2 px-6 mt-4 lg:mt-0">
@@ -143,8 +193,7 @@ function Page() {
               Submit
             </button>
             <p class="text-xs text-gray-500 mt-3">
-              Chicharrones blog helvetica normcore iceland tousled brook viral
-              artisan.
+              {/* test sentence */}
             </p>
           </div>
         </div>
@@ -158,12 +207,12 @@ function Page() {
                 <img
                   alt="testimonial"
                   class="w-40 h-40 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100"
-                  src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80"
+                  src="https://avatar.iran.liara.run/public/boy?"
                 />
                 <p class="leading-relaxed"></p>
                 <span class="inline-block h-1 w-10 rounded bg-indigo-500 mt-6 mb-4"></span>
                 <h2 class="text-gray-900 font-medium title-font tracking-wider text-sm">
-                  HENRY LETHAM
+                  Zameer Ahmed
                 </h2>
                 {/* <p class="text-gray-500">CTO</p> */}
               </div>
@@ -173,12 +222,12 @@ function Page() {
                 <img
                   alt="testimonial"
                   class="w-40 h-40 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100"
-                  src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80"
+                  src="https://avatar.iran.liara.run/public/girl?username=prerana"
                 />
                 <p class="leading-relaxed"></p>
                 <span class="inline-block h-1 w-10 rounded bg-indigo-500 mt-6 mb-4"></span>
                 <h2 class="text-gray-900 font-medium title-font tracking-wider text-sm">
-                  HENRY LETHAM
+                  Prerana Patil
                 </h2>
                 {/* <p class="text-gray-500">CTO</p> */}
               </div>
@@ -188,12 +237,12 @@ function Page() {
                 <img
                   alt="testimonial"
                   class="w-40 h-40 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100"
-                  src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80"
+                  src="https://avatar.iran.liara.run/public/girl?username=megha"
                 />
                 <p class="leading-relaxed"></p>
                 <span class="inline-block h-1 w-10 rounded bg-indigo-500 mt-6 mb-4"></span>
                 <h2 class="text-gray-900 font-medium title-font tracking-wider text-sm">
-                  HENRY LETHAM
+                Megha
                 </h2>
                 {/* <p class="text-gray-500">CTO</p> */}
               </div>
@@ -203,12 +252,12 @@ function Page() {
                 <img
                   alt="testimonial"
                   class="w-40 h-40 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100"
-                  src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80"
+                  src="https://avatar.iran.liara.run/public/girl?username=smita"
                 />
                 <p class="leading-relaxed"></p>
                 <span class="inline-block h-1 w-10 rounded bg-indigo-500 mt-6 mb-4"></span>
                 <h2 class="text-gray-900 font-medium title-font tracking-wider text-sm">
-                  HENRY LETHAM
+                  Smita Patil
                 </h2>
                 {/* <p class="text-gray-500">CTO</p> */}
               </div>
@@ -221,3 +270,6 @@ function Page() {
 }
 
 export default Page;
+
+
+// <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7695.98253769993!2d74.74847604557075!3d15.32270964932819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbf266a5df844e3%3A0x1cd14e5a443ec23c!2sKLS%20Vishwanathrao%20Deshpande%20Institute%20of%20Technology!5e0!3m2!1sen!2sin!4v1708969313110!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>

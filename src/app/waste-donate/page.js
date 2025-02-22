@@ -4,6 +4,19 @@ import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
 import { auth, db } from "../../../firebase/firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { z } from "zod";
+
+
+const wasteSchema = z.object({
+  wasteType: z.string().min(2, { message: "Waste type must be at least 2 characters long." }).max(50, { message: "Waste type must not exceed 50 characters." }).nonempty({ message: "Waste type must not be empty." }),
+  wasteDesc: z.string().min(10, { message: "Waste description must be at least 10 characters long." }).max(500, { message: "Waste description must not exceed 500 characters." }).nonempty({ message: "Waste description must not be empty." }),
+  quantity: z.string().regex(/^\d+$/, { message: "Quantity must be a valid number." }).nonempty({ message: "Quantity must not be empty." }),
+  location: z.string().nonempty({ message: "Location must not be empty." }),
+  contactPhone: z.string().min(10, { message: "Phone number must be at least 10 digits long." }).max(10, { message: "Phone number must be exactly 10 digits long." }).nonempty({ message: "Phone number must not be empty." }),
+  contactEmail: z.string().email({ message: "Invalid email format." }).nonempty({ message: "Email must not be empty." }),
+  sellingPrice: z.string().regex(/^\d+$/, { message: "Selling price must be a valid number." }).nonempty({ message: "Selling price must not be empty." }),
+  additionalInformation: z.string().nonempty({ message: "Additional information must not be empty." }),
+});
 
 function Page() {
   const [confirm, setConfirm] = useState(true);
@@ -18,30 +31,42 @@ function Page() {
     sellingPrice: "",
     additionalInformation: "",
   });
+
   const onchange = (e) => {
     setDetails({ ...details, [e.target.name]: e.target.value });
   };
+
   const submit = () => {
-    const dbInstance = collection(db, `wasteDonate`);
-    addDoc(dbInstance, details)
-      .then(() => {
-        setConfirm(!confirm);
-        setContact({
-          wasteType: "",
-          wasteDesc: "",
-          quantity: "",
-          location: "",
-          contactPerson: "",
-          contactEmail: "",
-          contactPhone: "",
-          sellingPrice: "",
-          additionalInformation: "",
+    try {
+      wasteSchema.parse(details);
+      const dbInstance = collection(db, `wasteDonate`);
+      addDoc(dbInstance, details)
+        .then(() => {
+          setConfirm(false);
+          setDetails({
+            wasteType: "",
+            wasteDesc: "",
+            quantity: "",
+            location: "",
+            contactPerson: "",
+            contactEmail: "",
+            contactPhone: "",
+            sellingPrice: "",
+            additionalInformation: "",
+          });
+          setTimeout(() => {
+            setConfirm(true);
+          }, 3000); // 3 seconds delay
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    } catch (error) {
+      alert(error.errors[0].message);
+    }
   };
+
+
 
   const user = useAuthState(auth)?.[0];
   console.log(user);
@@ -74,8 +99,8 @@ function Page() {
                   name="wasteType"
                   id="floating_text"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                  placeholder=" "
-                  required
+                  placeholder="                    Plastic, Domestic, Compost, etc."
+              required
                 />
                 <label
                   for="floating_text"
@@ -278,3 +303,29 @@ function Page() {
 }
 
 export default Page;
+
+
+  // const onchange = (e) => {
+  //   setDetails({ ...details, [e.target.name]: e.target.value });
+  // };
+  // const submit = () => {
+  //   const dbInstance = collection(db, `wasteDonate`);
+  //   addDoc(dbInstance, details)
+  //     .then(() => {
+  //       setConfirm(!confirm);
+  //       setContact({
+  //         wasteType: "",
+  //         wasteDesc: "",
+  //         quantity: "",
+  //         location: "",
+  //         contactPerson: "",
+  //         contactEmail: "",
+  //         contactPhone: "",
+  //         sellingPrice: "",
+  //         additionalInformation: "",
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };

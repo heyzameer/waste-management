@@ -6,10 +6,20 @@ import { AiOutlineMail } from "react-icons/ai";
 import { CiLocationOn } from "react-icons/ci";
 import { useParams } from "next/navigation";
 
+
+import { z } from 'zod';
+
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection, getDoc, doc, addDoc } from "firebase/firestore";
 import { db } from "../../../../firebase/firebaseConfig";
 import PageNotFound from "@/components/404";
+
+
+
+
+const phoneSchema = z.string().min(10).max(10);
+const emailSchema = z.string().email();
+
 function Page() {
   const [contact, setContact] = useState({ phone: "", email: "" });
   const [confirm, setConfirm] = useState(true);
@@ -18,17 +28,26 @@ function Page() {
   };
   const { slug } = useParams();
   const submit = async () => {
-    const dbInstance = collection(db, `companies/${slug}/contact`);
-    addDoc(dbInstance, contact)
-      .then(() => {
-        setConfirm(!confirm);
-        setContact({ phone: "", email: "" });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      phoneSchema.parse(contact.phone);
+      emailSchema.parse(contact.email);
+
+      const dbInstance = collection(db, `companies/${slug}/contact`);
+      await addDoc(dbInstance, contact);
+
+      // setConfirm(!confirm);
+      setConfirm(false);
+      setContact({ phone: "", email: "" });
+      setTimeout(() => {
+        setConfirm(true);
+      }, 3000); // 3 seconds delay
+    } catch (error) {
+      console.error(error);
+      alert('Please enter a valid email address and password');
+
+    }
   };
-  //   const router = useRouter();
+
 
   console.log(slug);
   const [data, setData] = useState(null);
@@ -45,15 +64,7 @@ function Page() {
     }
     getData();
   }, []);
-  //   const slug = "Adfasd";
-  //   const [snapshot, loading, error] = useCollection(
-  //     collection(db, "companies", `/${slug}`)
-  //   );
-  //   const company = snapshot?.docs?.map((doc) => ({
-  //     id: doc.id,
-  //     ...doc.data(),
-  //   }));
-  //   console.log(company);
+
   if (!data) {
     return (
       <>

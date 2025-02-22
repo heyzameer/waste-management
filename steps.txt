@@ -1,0 +1,50 @@
+install node js from web site
+
+node --version
+
+npm install -g yarn
+
+yarn install
+ 
+npm install zod
+
+//import { z } from 'zod';
+
+yarn run dev
+
+contact with companies -- 
+
+west donation-- detail of west shown in west consumer
+
+west awairness
+
+
+//autoprefixer: Automatically adds vendor prefixes to CSS rules for optimal cross-browser compatibility.
+
+eslint: JavaScript linting tool to enforce code style and find potential errors.
+
+eslint-config-next: Pre-configured ESLint rules tailored for Next.js projects.
+
+firebase: Google's platform for building mobile and web applications, offering database, authentication, and other backend services.
+
+next: React framework for creating web apps with server-side rendering, static site generation, and excellent developer experience.
+
+postcss: Tool for transforming CSS with plugins for future features, optimizations, and more.
+
+react: Frontend JavaScript library for building reusable and dynamic user interfaces.
+
+react-dom: Library specifically for interacting with the web browser's DOM from within React applications.
+
+react-firebase-hooks: Provides convenient hooks for integrating Firebase services into your React components.
+
+react-icons: Collection of popular icon sets as React components.
+
+tailwindcss: Utility-first CSS framework for rapidly building custom designs without writing much CSS.
+
+
+
+
+lingo
+
+
+npm install next-intl

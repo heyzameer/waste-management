@@ -2,8 +2,12 @@ import Navbar from "@/components/navbar";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+// import MyComponent  from "@/components/GoogleTranslate";
+// import ChatBotButton from "@/components/ChatBot";
 
 export default function Home() {
+
+
   return (
     <>
       <Head>
@@ -25,17 +29,30 @@ export default function Home() {
               waste-related challenges head-on. From recycling tips to
               sustainable practices, we provide a one-stop platform for
               individuals and businesses to join the movement towards a cleaner,
-              healthier planet. Join us in shaping a brighter future through
-              responsible waste management.
+              healthier planet. Join us in shaping a brighter future through responsible waste management.
             </p>
+
+
             <div class="flex justify-center">
+
+            {/* <a href="https://mediafiles.botpress.cloud/3e50d59a-eeb3-47d3-a25f-843b525639d2/webchat/bot.html" target="_blank" rel="noopener noreferrer">
+
               <button class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
-                Waste Donar
+                Chat Bot
               </button>
+              </a>
+               */}
+
+
+
+              {/* <a href="https://mediafiles.botpress.cloud/3e50d59a-eeb3-47d3-a25f-843b525639d2/webchat/bot.html" target="_blank" rel="noopener noreferrer">
+
               <button class="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">
-                Waste Reducer
-              </button>
+                Waste Reducer</button>
+              </a> */}
+              
             </div>
+
           </div>
           <div class="lg:max-w-lg lg:w-full md:w-2/2 w-6/6">
             <img
@@ -113,15 +130,10 @@ export default function Home() {
                     alt="Sunset in the mountains"
                   />
                   <div class="px-6 py-4">
-                    <div class="font-bold text-xl mb-2">Waste Consumer</div>
+                    <div class="font-bold text-xl mb-2">Eco Mart</div>
                     <p class="text-gray-700 text-base">
-                      Discover a unique and innovative approach to waste
-                      management with our service, where you can buy waste
-                      materials for various purposes. Embrace the concept of
-                      upcycling and repurposing by acquiring recyclable or
-                      reusable waste products, promoting sustainability and
-                      creativity.
-                    </p>
+                      Discover a unique and innovative approach to waste management with our service, where you can buy waste materials for various purposes. Embrace the concept of upcycling and repurposing by acquiring recyclable or reusable waste products, promoting sustainability and
+                      creativity.</p>
                   </div>
                 </div>
               </Link>
