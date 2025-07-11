@@ -18,7 +18,6 @@ west donation-- detail of west shown in west consumer
 
 west awairness
 
-
 //autoprefixer: Automatically adds vendor prefixes to CSS rules for optimal cross-browser compatibility.
 
 eslint: JavaScript linting tool to enforce code style and find potential errors.
